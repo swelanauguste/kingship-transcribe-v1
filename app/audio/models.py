@@ -24,6 +24,9 @@ class TranscribeAudio(models.Model):
     transcription = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ["-pk"]
 
     def __str__(self):
         return f"{self.audio_file.name}"

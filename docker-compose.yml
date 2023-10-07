@@ -11,18 +11,18 @@ services:
   #   # networks:
   #   #   - live
 
-  redis:
-    image: "redis:alpine"
-    hostname: redis
-    restart: always
-    # networks:
-    #   - live
+  # redis:
+  #   image: "redis:alpine"
+  #   hostname: redis
+  #   restart: always
+  #   # networks:
+  #   #   - live
 
   web:
     build:
       context: ./app
       dockerfile: Dockerfile
-    command: gunicorn cf.wsgi:application --bind 0.0.0.0:8010
+    command: bash -c "gunicorn cf.wsgi:application --bind 0.0.0.0:8010 && celery worker -A cf --loglevel=info --detach"
     volumes:
       - ./app/:/usr/src/app/
     ports:
@@ -31,8 +31,8 @@ services:
       - ./.env
     # network_mode: "host"
     restart: unless-stopped
-    depends_on:
-      - redis
+    # depends_on:
+    #   - redis
       # - db
     # networks:
     #   - live
