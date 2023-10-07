@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  # db:
+  #   image: postgres:12-alpine
+  #   restart: always
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   env_file:
+  #     - .env
+  #   # networks:
+  #   #   - live
+
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+    restart: always
+    # networks:
+    #   - live
+
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: gunicorn cf.wsgi:application --bind 0.0.0.0:8010
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - 8010:8010
+    env_file:
+      - ./.env
+    # network_mode: "host"
+    restart: unless-stopped
+    depends_on:
+      - redis
+      # - db
+    # networks:
+    #   - live
+
+  celery:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: celery -A cf worker -l info
+      - web
+      - redis
+      # - db
+    restart: always
+    # networks:
+    #   - live
+
+  # flower:
+  #   build:
+  #     context: ./app
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5555:5555"
+  #   command: "celery -A cf flower --address=0.0.0.0"
+  #   restart: always
+  #   depends_on:
+  #     - celery
+    # networks:
+    #   - live
+
+# volumes:
+#   postgres_data:
+# networks:
+#   live:

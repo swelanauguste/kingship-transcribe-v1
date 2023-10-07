@@ -1,0 +1,9 @@
+<br>
+<a href="{% url 'transcribe' %}">transcribe</a>
+<hr>
+{% for obj in object_list %}
+    <a href="{% url 'detail' obj.pk %}">{{obj}}</a>
+{% empty %}
+<p>Nothing</p>
+{% endfor %}
+    
