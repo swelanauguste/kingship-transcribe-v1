@@ -1,16 +1,23 @@
+import whisper
 from celery import shared_task
 
-from .models import TranscribeAudio, Status
+from .models import Status, TranscribeAudio
 
 
 @shared_task
 def transcribe_audio(task_id):
-    task = TranscribeAudio.objects.get(id=task_id)
-    audio_file = task.audio_file
-    result = task.transcribe(audio_file, fp16=False)
-    task.transcription = result['text']
-    task.status = Status.objects.get(status__icontains='transcribed')
-    return f'{task.status}'
+    try:
+        task = TranscribeAudio.objects.get(id=task_id)
+        model = whisper.load_model("base")
+        audio_file = task.audio_file.path
+        result = model.transcribe(audio_file, fp16=False)
+        task.transcription = result["text"]
+        task.status = Status.objects.get(status__icontains="transcribed")
+        task.save()
+        return f"Transcription successful for task {task.id}"
+    except Exception as e:
+        return f"Transcription failed for task {task.id} with error {e}"
+
 
 #     model = whisper.load_model("base")
 #     result = model.transcribe(audio_file, fp16=False)

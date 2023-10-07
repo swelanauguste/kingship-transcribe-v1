@@ -2,7 +2,7 @@
 <a href="{% url 'transcribe' %}">transcribe</a>
 <hr>
 {% for obj in object_list %}
-    <a href="{% url 'detail' obj.pk %}">{{obj}}</a>
+    <a href="{% url 'detail' obj.pk %}">{{obj}} {{obj.status}}</a><hr>
 {% empty %}
 <p>Nothing</p>
 {% endfor %}

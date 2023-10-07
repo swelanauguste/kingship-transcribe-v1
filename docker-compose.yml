@@ -37,16 +37,16 @@ services:
     # networks:
     #   - live
 
-  celery:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    command: celery -A cf worker -l info
-      - web
-      - redis
-      # - db
-    restart: always
-    # networks:
+  # celery:
+  #   build:
+  #     context: ./app
+  #     dockerfile: Dockerfile
+  #   command: celery --app=cf worker -l info
+  #     - web
+  #     - redis
+  #     # - db
+  #   restart: always
+  #   # networks:
     #   - live
 
   # flower:
