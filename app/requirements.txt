@@ -4,3 +4,5 @@ gunicorn==21.2.0
 openai-whisper==20230918
 redis==4.6.0
 flower==2.0.1
+crispy-bootstrap5==0.7
+django-allauth==0.57.0

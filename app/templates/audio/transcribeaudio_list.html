@@ -1,9 +1,36 @@
-<br>
-<a href="{% url 'transcribe' %}">transcribe</a>
-<hr>
-{% for obj in object_list %}
-    <a href="{% url 'detail' obj.pk %}">{{obj}} {{obj.status}}</a><hr>
-{% empty %}
-<p>Nothing</p>
-{% endfor %}
-    
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between">
+        <h1>Transcription</h1>
+        <a class="text-dark"
+            href="{% url 'transcribe' %}"><span
+                class="material-symbols-outlined fs-1 mx-5">
+                add
+            </span></a>
+    </div>
+
+    <hr>
+    <div class="col-lg-6">
+
+        {% for obj in object_list %}
+        <a class="text-dark text-decoration-none"
+            href="{% url 'detail' obj.pk %}">
+            <div
+                class="border rounded-4 shadow p-3 mb-2  bg-{{obj.get_status}}">
+                <span>{{obj}}</span>
+                <br>
+                <p class="small text-muted text-end">{{obj.created_at}}</p>
+            </div>
+        </a>
+
+        {% empty %}
+        <p>Nothing</p>
+
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock content %}

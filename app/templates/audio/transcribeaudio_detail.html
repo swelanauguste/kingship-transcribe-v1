@@ -1,6 +1,10 @@
-<br>
-<a href="/">Home</a>
-<hr>
-{{object}}
-<hr>
-{{object.transcription}}
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container py-5">
+    <h1>{{object}}</h1>
+    <hr>
+    <p class="border rounded-4 shadow p-3">{{object.transcription}}</p>
+</div>
+{% endblock content %}

@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "audio",
 ]
 
@@ -120,8 +122,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_TIMEZONE = "America/St_Lucia"
 
-# CELERY_BROKER_URL = "redis://172.17.0.3:6379/0"
-# CELERY_RESULT_BACKEND = "redis://172.17.0.3:6379/0"
-# CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
-# CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
-CELERY_BROKER_URL = 'amqp://192.168.0.7:5672//'
+CELERY_BROKER_URL = "amqp://192.168.0.7:5672//"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

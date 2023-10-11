@@ -12,7 +12,7 @@ def create_transcription(request):
         if form.is_valid():
             uploaded_file = request.FILES['audio_file']
             form.save()
-            transcribe_audio.delay(form.instance.id)
+            # transcribe_audio.delay(form.instance.id)
             return redirect('/')
     else:
         form = TranscribeAudioForm()

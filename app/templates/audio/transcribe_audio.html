@@ -1,6 +1,21 @@
-<br>
-<form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Submit</button>
-</form>
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+
+    <form class="col-lg-4"
+        action=""
+        method="post"
+        enctype="multipart/form-data">
+        <h1>Form</h1>
+        <hr>
+        {% csrf_token %}
+        {{form|crispy}}
+        <br>
+        <p class="text-end d-grid"><button class="btn btn-outline-dark"
+                type="submit">Submit</button></p>
+    </form>
+</div>
+{% endblock content %}
