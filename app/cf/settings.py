@@ -123,6 +123,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CELERY_TIMEZONE = "America/St_Lucia"
 
 CELERY_BROKER_URL = "amqp://192.168.0.7:5672//"
+CELERY_RESULT_BACKEND = 'redis://192.168.0.7:6379'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
