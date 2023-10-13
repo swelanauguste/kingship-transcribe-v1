@@ -16,6 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ["https://transcription.kingship.info/"]
 
 # Application definition
 
