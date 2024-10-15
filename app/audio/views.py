@@ -1,5 +1,7 @@
-from django.shortcuts import render, redirect
+import threading
+
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from .forms import TranscribeAudioForm
@@ -8,17 +10,23 @@ from .tasks import transcribe_audio
 
 
 def create_transcription(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = TranscribeAudioForm(request.POST, request.FILES)
         if form.is_valid():
             # uploaded_file = request.FILES['audio_file']
             form.save()
-            transcribe_audio.delay(form.instance.id)
+            # transcribe_audio.delay(form.instance.id)
+            transcribe_audio_thread = threading.Thread(
+                target=transcribe_audio, args=(form.instance.id,)
+            )
+            transcribe_audio_thread.start()
+            # transcribe_audio.delay(form.instance.id)
             # return redirect('/')
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect("/")
     else:
         form = TranscribeAudioForm()
-    return render(request, 'audio/transcribe_audio.html', {'form': form})
+    return render(request, "audio/transcribe_audio.html", {"form": form})
+
 
 class TranscribeAudioListView(ListView):
     model = TranscribeAudio

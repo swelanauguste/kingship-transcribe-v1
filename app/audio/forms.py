@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Status, TranscribeAudio
+from .models import TranscribeAudio
 
 
 class TranscribeAudioForm(forms.ModelForm):

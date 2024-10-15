@@ -5,6 +5,14 @@
 <div class="container py-5">
     <h1>{{object}}</h1>
     <hr>
+    
+    {% if object.transcription %}
+
     <p class="border rounded-4 shadow p-3">{{object.transcription}}</p>
+
+    {% else %}
+        <p class="text-center">Processing...</p>
+    {% endif %}
+        
 </div>
 {% endblock content %}
