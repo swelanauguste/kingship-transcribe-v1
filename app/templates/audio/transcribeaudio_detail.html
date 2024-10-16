@@ -11,7 +11,9 @@
     <p class="border rounded-4 shadow p-3">{{object.transcription}}</p>
 
     {% else %}
-        <p class="text-center">Processing...</p>
+        <div class="text-center"><div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div></div>
     {% endif %}
         
 </div>
