@@ -20,11 +20,12 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    command: bash -c "gunicorn cf.wsgi:application --bind 0.0.0.0:8010 && celery worker -A cf --loglevel=info --detach"
+    command: bash -c "gunicorn cf.wsgi:application --bind 0.0.0.0:8020
+    # command: bash -c "gunicorn cf.wsgi:application --bind 0.0.0.0:8010 && celery worker -A cf --loglevel=info --detach"
     volumes:
       - ./app/:/usr/src/app/
     ports:
-      - 8010:8010
+      - 8020:8020
     env_file:
       - ./.env
     # network_mode: "host"
