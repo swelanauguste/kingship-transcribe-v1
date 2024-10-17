@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<div class="container py-5">
+<div class="py-5 small">
     <div class="d-flex justify-content-between">
         <h1>Transcription</h1>
         <a class="text-dark"
@@ -13,15 +13,21 @@
     </div>
 
     <hr>
-    <div class="col-lg">
+    <div class="col-lg-4 mx-auto">
 
         {% for obj in object_list %}
         <a class="text-dark text-decoration-none"
             href="{% url 'detail' obj.pk %}">
             <div
-                class="border rounded-4 shadow p-3 mb-2  bg-{{obj.get_status}}">
-                <span>{{obj}}</span>
-                <br>
+                class="border rounded-4 shadow p-5 mb-2  bg-{{obj.get_status}}">
+                <span class="fw-bold">{{obj.name}} ({{obj.probability}})</span>
+                <hr>
+                
+                {% if obj.transcription %}
+                <p>{{obj.transcription|truncatechars:500}}</p>
+                    
+                {% endif %}
+                    
                 <p class="small text-muted text-end">{{obj.created_at}}</p>
             </div>
         </a>

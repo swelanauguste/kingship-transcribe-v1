@@ -3,18 +3,37 @@
 
 {% block content %}
 <div class="container py-5">
-    <h1>{{object}}</h1>
-    <hr>
-    
-    {% if object.transcription %}
-
-    <p class="border rounded-4 shadow p-3">{{object.transcription}}</p>
-
-    {% else %}
-        <div class="text-center"><div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div></div>
+    <h1>{{object.name|truncatechars:60}}</h1>
+    <br>
+    {% if object.start %}
+    <p class="alert alert-info"><strong>Start: </strong>{{object.start}}</p>
     {% endif %}
-        
+
+    <audio controls>
+        <source src="{% if object.audio_file %}{{ object.audio_file.url }}{% endif %}" type="audio/mp3">
+    </audio>
+    {% if object.transcription %}
+    <p class="border rounded-4 shadow p-5">{{object.transcription}}</p>
+    {% else %}
+    <div class="text-center">
+        <div class="spinner-border"
+            role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if object.end %}
+    <p class="alert alert-success"><strong>End: </strong>{{object.end}}</p>
+    <p class="alert alert-info"><strong>Duration: </strong>{{object.get_duration}}</p>
+    <p><a href="{% url 'export_to_word' object.pk %}">Download</a></p>
+    {% else %}
+    <div class="text-center">
+        <div class="spinner-border"
+            role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock content %}

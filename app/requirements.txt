@@ -1,8 +1,7 @@
-celery
-Django
-gunicorn
-openai-whisper
-redis
-flower
-crispy-bootstrap5
-django-allauth
+crispy-bootstrap5==2024.10
+Django==5.1.2
+faster-whisper==1.0.3
+gunicorn==23.0.0
+python-docx==1.1.2
+
+

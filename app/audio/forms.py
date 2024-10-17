@@ -10,4 +10,3 @@ class TranscribeAudioForm(forms.ModelForm):
             "name",
             "audio_file",
         )
-        # widgets = {"audio_file": forms.FileInput(attrs={"class": "form-control"})}
