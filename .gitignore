@@ -162,3 +162,6 @@ cython_debug/
 t*.txt
 a*.txt
 *.mp3
+
+mediafiles/
+transcription/

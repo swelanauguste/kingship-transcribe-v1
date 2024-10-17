@@ -40,9 +40,11 @@ def export_to_word(request, pk):
 
     # Add a title
     doc.add_heading("Data Export", 0)
+    
 
     # Get the data you want to export
     data = TranscribeAudio.objects.get(pk=pk)
+    document_name = data.name
 
     # Add data to the document
     doc.add_paragraph(f"Name: {data.name}")
@@ -55,7 +57,8 @@ def export_to_word(request, pk):
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
-    response["Content-Disposition"] = 'attachment; filename=f"export.docx"'
+    filename = f"{document_name}.docx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     # Save the document to the response
     doc.save(response)

@@ -2,38 +2,38 @@
 
 
 {% block content %}
-<div class="py-5 small">
+<div class="p-5">
     <div class="d-flex justify-content-between">
         <h1>Transcription</h1>
-        <a class="text-dark"
+        <a class="text-white"
             href="{% url 'transcribe' %}"><span
                 class="material-symbols-outlined fs-1 mx-5">
                 add
             </span></a>
     </div>
 
-    <hr>
-    <div class="col-lg-4 mx-auto">
+    <br>
+    <div class="col-lg-6 mx-auto">
 
         {% for obj in object_list %}
-        <a class="text-dark text-decoration-none"
+        <a class=" text-light text-decoration-none"
             href="{% url 'detail' obj.pk %}">
             <div
-                class="border rounded-4 shadow p-5 mb-2  bg-{{obj.get_status}}">
+                class="border rounded-4 shadow p-4 mb-2  bg-{{obj.get_status}}">
                 <span class="fw-bold">{{obj.name}} ({{obj.probability}})</span>
                 <hr>
                 
                 {% if obj.transcription %}
-                <p>{{obj.transcription|truncatechars:500}}</p>
+                <p>{{obj.transcription|slice:550}}</p>
                     
                 {% endif %}
                     
-                <p class="small text-muted text-end">{{obj.created_at}}</p>
+                <p class="small text-end">{{obj.created_at}}</p>
             </div>
         </a>
 
         {% empty %}
-        <p>Nothing</p>
+        <p class="text-center">No data</p>
 
         {% endfor %}
     </div>

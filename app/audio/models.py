@@ -1,4 +1,14 @@
+import random
+import string
+
 from django.db import models
+from django.utils.text import slugify
+
+
+def generate_short_id():
+    length = 8  # You can adjust the length as needed
+    characters = string.ascii_letters + string.digits
+    return "".join(random.choice(characters.upper()) for i in range(length))
 
 
 class TranscribeAudio(models.Model):
@@ -6,7 +16,13 @@ class TranscribeAudio(models.Model):
     Model to store the audio file and its transcription
     """
 
-    name = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        null=True,
+        blank=True,
+        default=generate_short_id,
+    )
     audio_file = models.FileField(upload_to="audio_files/")
     start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
@@ -19,6 +35,10 @@ class TranscribeAudio(models.Model):
         ordering = [
             "-updated_at",
         ]
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(TranscribeAudio, self).save(*args, **kwargs)
 
     def get_duration(self):
         if self.start and self.end:
