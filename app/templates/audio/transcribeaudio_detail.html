@@ -6,14 +6,17 @@
 <div class="container-fluid py-5">
     <h1>{{object.name|truncatechars:60}}</h1>
     <hr>
-    <div class="row">
-        <div class="col-lg-3">
-            <audio controls
-                class="col-lg-12 mb-3 border border-secondary rounded-pill">
-                <source
-                    src="{% if object.audio_file %}{{ object.audio_file.url }}{% endif %}"
-                    type="audio/mp3">
-            </audio>
+    <audio controls
+        class="w-100 mb-3">
+        <source
+            src="{% if object.audio_file %}{{ object.audio_file.url }}{% endif %}"
+            type="audio/mp3">
+    </audio>
+    <div id="content"
+        class="row">
+
+        <div class="col-lg-2">
+
             {% if object.start %}
             <p class="alert alert-info rounded-pill border border-info">
                 <strong>Start:
@@ -22,7 +25,8 @@
             {% endif %}
 
             {% if object.end %}
-            <p class="alert alert-success rounded-pill border border-success">
+            <p data-end="{{ object.end }}"
+                class="alert alert-success rounded-pill border border-success">
                 <strong>End: </strong>{{object.end}}
             </p>
             <p class="alert alert-info rounded-pill border border-info">
@@ -61,12 +65,30 @@
     </div>
 </div>
 <script>
-    end = "{{object.end}}"
+    const end = "{{ object.end }}";
+    console.log(end);
+
     if (end === 'None') {
-        // Reload page every 5 seconds (optional)
-        setTimeout(function () {
-            window.location.reload(1);
-        }, 10000);
+        // Start the interval if the end is not set (None)
+        const intervalId = setInterval(function () {
+            fetch(location.href, { method: 'GET' })
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newContent = doc.getElementById('content').innerHTML;
+                    document.getElementById('content').innerHTML = newContent;
+
+                    // After the update, check if the 'end' field is no longer 'None'
+                    const updatedEnd = doc.querySelector("[data-end]").getAttribute("data-end");
+                    console.log(updatedEnd, 'updatedEnd');
+                    if (updatedEnd !== 'None') {
+                        // Stop the interval when 'end' is set
+                        clearInterval(intervalId);
+                    }
+                })
+                .catch(error => console.log('Error:', error));
+        }, 5000);
     }
 </script>
 
