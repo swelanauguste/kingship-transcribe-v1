@@ -1,6 +1,6 @@
 import threading
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from docx import Document
@@ -32,6 +32,8 @@ class TranscribeAudioListView(ListView):
 
 class TranscribeAudioDetailView(DetailView):
     model = TranscribeAudio
+
+ 
 
 
 def export_to_word(request, slug):
