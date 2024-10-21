@@ -165,3 +165,4 @@ a*.txt
 
 mediafiles/
 transcription/
+staticfiles/

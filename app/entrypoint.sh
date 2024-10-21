@@ -13,11 +13,9 @@
 
 python manage.py migrate
 python manage.py makemigrations
-python manage.py migrate
-# python manage.py migrate django_celery_results
 
-python manage.py createsuperuser --username kingship --email kingship.lc@gmail.com --noinput
+python manage.py createsuperuser --noinput
 
-python manage.py collectstatic --noinput
+# python manage.py collectstatic --noinput
 
 exec "$@"

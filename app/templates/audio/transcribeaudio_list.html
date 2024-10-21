@@ -17,7 +17,7 @@
 
         {% for obj in object_list %}
         <a class=" text-light text-decoration-none"
-            href="{% url 'detail' obj.pk %}">
+            href="{% url 'detail' obj.slug %}">
             <div
                 class="border rounded-4 shadow p-4 mb-2  bg-{{obj.get_status}}">
                 <span class="fw-bold">{{obj.name}} ({{obj.probability}})</span>

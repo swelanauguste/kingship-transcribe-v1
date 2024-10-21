@@ -10,6 +10,6 @@ from .views import (
 urlpatterns = [
     path("", TranscribeAudioListView.as_view(), name="list"),
     path("transcribe/", create_transcription, name="transcribe"),
-    path("detail/<int:pk>/", TranscribeAudioDetailView.as_view(), name="detail"),
-    path("export_to_word/<int:pk>/", export_to_word, name="export_to_word"),
+    path("detail/<slug:slug>/", TranscribeAudioDetailView.as_view(), name="detail"),
+    path("export_to_word/<slug:slug>/", export_to_word, name="export_to_word"),
 ]

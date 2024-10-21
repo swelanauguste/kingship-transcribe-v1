@@ -19,7 +19,7 @@ def create_transcription(request):
                 target=transcribe_audio, args=(form.instance.id,)
             )
             transcribe_audio_thread.start()
-        return redirect("detail", pk=form.instance.id)
+        return redirect("detail", slug=form.instance.slug)
 
     else:
         form = TranscribeAudioForm()
@@ -34,20 +34,18 @@ class TranscribeAudioDetailView(DetailView):
     model = TranscribeAudio
 
 
-def export_to_word(request, pk):
+def export_to_word(request, slug):
     # Create a new Document
     doc = Document()
+    data = TranscribeAudio.objects.get(slug=slug)
 
     # Add a title
-    doc.add_heading("Data Export", 0)
-    
+    doc.add_heading(f"{data.name}", 0)
 
     # Get the data you want to export
-    data = TranscribeAudio.objects.get(pk=pk)
     document_name = data.name
 
     # Add data to the document
-    doc.add_paragraph(f"Name: {data.name}")
     doc.add_paragraph(f"Probability: {data.probability}")
     doc.add_paragraph(f"Duration: {data.get_duration()}")
     doc.add_paragraph(f"Description: {data.transcription}")
@@ -58,7 +56,7 @@ def export_to_word(request, pk):
         content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
     filename = f"{document_name}.docx"
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
 
     # Save the document to the response
     doc.save(response)

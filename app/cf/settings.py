@@ -1,6 +1,10 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,7 +20,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["https://transcription.kingship.info/"]
+CSRF_TRUSTED_ORIGINS = ["https://10.137.8.14"]
 
 # Application definition
 
@@ -122,10 +126,6 @@ MEDIA_ROOT = BASE_DIR / "mediafiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_TIMEZONE = "America/St_Lucia"
-
-# CELERY_BROKER_URL = "amqp://192.168.0.7:5672//"
-CELERY_BROKER_URL = "redis://192.168.0.104:6379/0"
-CELERY_RESULT_BACKEND = "redis://192.168.0.104:6379/0"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 

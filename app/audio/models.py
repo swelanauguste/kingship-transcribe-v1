@@ -23,6 +23,7 @@ class TranscribeAudio(models.Model):
         blank=True,
         default=generate_short_id,
     )
+    slug = models.SlugField(unique=True, blank=True)
     audio_file = models.FileField(upload_to="audio_files/")
     start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
@@ -32,9 +33,7 @@ class TranscribeAudio(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = [
-            "-updated_at",
-        ]
+        ordering = ["-updated_at"]
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -44,6 +43,10 @@ class TranscribeAudio(models.Model):
         if self.start and self.end:
             return self.end - self.start
         return ""
+    
+    def get_absolute_url(self):
+        return reverse("detail", kwargs={"slug": self.slug})
+    
 
     def __str__(self):
         return f"{self.audio_file.name}"
