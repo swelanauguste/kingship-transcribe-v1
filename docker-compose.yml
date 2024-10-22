@@ -1,67 +1,36 @@
 services:
-  # db:
-  #   image: postgres:12-alpine
-  #   restart: always
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   env_file:
-  #     - .env
-  #   # networks:
-  #   #   - live
-
-  # redis:
-  #   image: "redis:alpine"
-  #   hostname: redis
-  #   restart: always
-  #   # networks:
-  #   #   - live
-
   web:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8020
-    # command: bash -c "gunicorn cf.wsgi:application --bind 0.0.0.0:8010 && celery worker -A cf --loglevel=info --detach"
+    build: ./app
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: uvicorn cf.asgi:application --port 8020 --host 0.0.0.0
     volumes:
-      - ./app/:/usr/src/app/
-    ports:
-      - 8020:8020
+      # - ./app/:/usr/src/app/
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+
     env_file:
       - ./.env
-    # network_mode: "host"
+    expose:
+      - 8020
     restart: unless-stopped
-    # depends_on:
-    #   - redis
-      # - db
-    # networks:
-    #   - live
+  # db:
+  #   image: postgres:17rc1-bookworm
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data/
+  #   env_file:
+  #     - ./.env
 
-  # celery:
-  #   build:
-  #     context: ./app
-  #     dockerfile: Dockerfile
-  #   command: celery --app=cf worker -l info
-  #     - web
-  #     - redis
-  #     # - db
-  #   restart: always
-  #   # networks:
-    #   - live
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    ports:
+      - 8020:80
+    depends_on:
+      - web
 
-  # flower:
-  #   build:
-  #     context: ./app
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5555:5555"
-  #   command: "celery -A cf flower --address=0.0.0.0"
-  #   restart: always
-  #   depends_on:
-  #     - celery
-    # networks:
-    #   - live
-
-# volumes:
-#   postgres_data:
-# networks:
-#   live:
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
