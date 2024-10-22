@@ -1,5 +1,6 @@
 import threading
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
@@ -10,13 +11,16 @@ from .models import TranscribeAudio
 from .tasks import transcribe_audio
 
 
+@login_required
 def create_transcription(request):
     if request.method == "POST":
         form = TranscribeAudioForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            transcription = form.save(commit=False)
+            transcription.created_by = request.user
+            transcription = form.save()
             transcribe_audio_thread = threading.Thread(
-                target=transcribe_audio, args=(form.instance.id,)
+                target=transcribe_audio, args=(transcription.id,)
             )
             transcribe_audio_thread.start()
         return redirect("detail", slug=form.instance.slug)
@@ -30,12 +34,19 @@ class TranscribeAudioListView(ListView):
     model = TranscribeAudio
 
 
-class TranscribeAudioDetailView(DetailView):
-    model = TranscribeAudio
+@login_required
+def transcription_list_view(request):
+    transcription_list = TranscribeAudio.objects.filter(created_by=request.user)
+    return render(request, "audio/list.html", {"object_list": transcription_list})
 
- 
+
+@login_required
+def transcription_detail_view(request, slug):
+    transcription = TranscribeAudio.objects.get(slug=slug)
+    return render(request, "audio/detail.html", {"object": transcription})
 
 
+@login_required
 def export_to_word(request, slug):
     # Create a new Document
     doc = Document()

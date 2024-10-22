@@ -3,6 +3,7 @@ import string
 
 from django.db import models
 from django.utils.text import slugify
+from users.models import User
 
 
 def generate_short_id():
@@ -31,6 +32,9 @@ class TranscribeAudio(models.Model):
     transcription = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="transcriptions", null=True, blank=True
+    )
 
     class Meta:
         ordering = ["-updated_at"]
@@ -43,10 +47,9 @@ class TranscribeAudio(models.Model):
         if self.start and self.end:
             return self.end - self.start
         return ""
-    
+
     def get_absolute_url(self):
         return reverse("detail", kwargs={"slug": self.slug})
-    
 
     def __str__(self):
         return f"{self.audio_file.name}"

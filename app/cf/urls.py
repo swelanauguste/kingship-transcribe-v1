@@ -5,6 +5,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path("", include("audio.urls")),
+    path("users/", include("users.urls")),
     path("admin/", admin.site.urls),
 ]
 

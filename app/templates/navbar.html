@@ -1,6 +1,26 @@
-<nav class="d-flex justify-content-center p-2 border-bottom">
-    <a class="mx-2 text-bg-dark fw-bold text-decoration-none"
-        href="/"><span class="material-symbols-outlined fs-1">
-            home
-        </span></a>
+<nav class="p-2 border-bottom">
+    <div class="d-flex justify-content-around  align-items-center">
+
+        <a class="mx-2 text-bg-dark fw-bold text-decoration-none"
+            href="/"><span class="material-symbols-outlined fs-1">
+                home
+            </span></a>
+
+        <div class="d-flex justify-content-between">
+            {% if request.user.is_authenticated %}
+
+            <span><a href="{% url 'user-detail' %}"><span
+                        class="text-bg-dark material-symbols-outlined fs-3 mx-3">
+                        account_circle
+                    </span></a></span>
+
+            <span><a href="{% url 'logout' %}"><span
+                        class="text-bg-dark material-symbols-outlined fs-3">
+                        logout
+                    </span></a></span>
+            {% endif %}
+
+        </div>
+    </div>
+
 </nav>

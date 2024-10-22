@@ -26,6 +26,12 @@
 
     <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+
 
     <link rel="shortcut icon"
         href="{% static 'images/logo.png' %}"
@@ -60,6 +66,9 @@
         <a class="text-light text-decoration-none"
             href="mailto:swelanauguste@gmail.com">swelanauguste@gmail.com</a>
     </footer>
+    <script>
+        $('button[type="submit"]').addClass('btn btn-dark rounded-pill px-5');
+    </script>
 
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

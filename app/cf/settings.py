@@ -13,14 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7oyhf3z18j(j_n)9h%ea*ebxs)2a1em-&@*em3$459n920vav6"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get("DEBUG", default=0)))
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
-CSRF_TRUSTED_ORIGINS = ["https://10.137.8.14"]
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
+
 
 # Application definition
 
@@ -31,8 +32,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "django.contrib.humanize",
     "crispy_forms",
     "crispy_bootstrap5",
+    "users",
     "audio",
 ]
 
@@ -144,3 +148,77 @@ directories = [
 for directory in directories:
     if not os.path.exists(directory):
         os.makedirs(directory)
+
+
+# Custom user model
+AUTH_USER_MODEL = "users.User"
+
+AUTHENTICATION_BACKENDS = [
+    "users.backends.EmailBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+PASSWORD_RESET_TIMEOUT = 3600
+
+SITE_ID = 1
+
+# Redirect URLs
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/users/login/"
+LOGOUT_URL = "/users/login/"
+
+
+# Email settings
+ADMINS = [
+    ("ticketing system", "kingship.lc@gmail.com"),
+]
+
+DEFAULT_FROM_EMAIL = "kingship.lc@gmail.com"
+
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = "emails"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ.get("HOST")
+    EMAIL_HOST_USER = os.environ.get("EMAIL")
+    EMAIL_HOST_PASSWORD = os.environ.get("PASS")
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    # EMAIL_USE_SSL = False
+
+    # Logging settings
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "verbose": {
+                "format": "{levelname}, {asctime}, {module}, {process:d}, {thread:d}, {message}",
+                "style": "{",
+            },
+            "simple": {
+                "format": "{levelname} {message}",
+                "style": "{",
+            },
+        },
+        "handlers": {
+            "file": {
+                "level": "WARNING",
+                "class": "logging.FileHandler",
+                "filename": BASE_DIR / "debug/debug.log",
+                "formatter": "verbose",
+            },
+            "mail_admins": {
+                "level": "ERROR",
+                "class": "django.utils.log.AdminEmailHandler",
+                "formatter": "verbose",
+            },
+        },
+        "loggers": {
+            "django": {
+                "handlers": ["file", "mail_admins"],
+                "level": "WARNING",
+                "propagate": True,
+            },
+        },
+    }
