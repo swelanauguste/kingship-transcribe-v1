@@ -15,6 +15,7 @@ def transcribe_audio(task_id):
         model_size = "small"
         model = WhisperModel(model_size, device="cpu", compute_type="int8")
         audio_file = task.audio_file.path
+
         segments, info = model.transcribe(audio_file, beam_size=5)
         task.start = timezone.now()
         task.save()

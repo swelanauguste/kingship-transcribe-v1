@@ -1,8 +1,11 @@
+import os
 import random
 import string
 
+from django.core.files.base import ContentFile
 from django.db import models
 from django.utils.text import slugify
+from pydub import AudioSegment
 from users.models import User
 
 
@@ -33,14 +36,35 @@ class TranscribeAudio(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="transcriptions", null=True, blank=True
+        User,
+        on_delete=models.CASCADE,
+        related_name="transcriptions",
+        null=True,
+        blank=True,
     )
 
     class Meta:
         ordering = ["-updated_at"]
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.slug = slugify(self.name)
+        if self.audio_file and not self.audio_file.name.endswith(".mp3"):
+            # Load the audio file using pydub
+            audio = AudioSegment.from_file(self.audio_file)
+            # Convert the audio to MP3 format
+            audio_data = audio.export(format="mp3")
+
+            # Generate a new filename with an MP3 extension
+            filename, _ = os.path.splitext(self.audio_file.name)
+            mp3_filename = f"{filename}.mp3"
+
+            # Save the converted MP3 file
+            self.audio_file.save(
+                mp3_filename, ContentFile(audio_data.read()), save=False
+            )
+            audio_data.close()
+
         super(TranscribeAudio, self).save(*args, **kwargs)
 
     def get_duration(self):
@@ -52,4 +76,5 @@ class TranscribeAudio(models.Model):
         return reverse("detail", kwargs={"slug": self.slug})
 
     def __str__(self):
+        return f"{self.audio_file.name}"
         return f"{self.audio_file.name}"

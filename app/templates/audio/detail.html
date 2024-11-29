@@ -6,12 +6,21 @@
 <div class="container-fluid py-5">
     <h1>{{object.name|truncatechars:60}}</h1>
     <hr>
-    <audio controls
+    {% if object.audio_file %}
+    <audio type="audio/mpeg"
+        src="{{ object.audio_file.url }}"
+        controls 
         class="w-100 mb-3">
-        <source
-            src="{% if object.audio_file %}{{ object.audio_file.url }}{% endif %}"
-            type="audio/mp3">
+
     </audio>
+    {{ object.audio_file.url }}
+    <figure>
+        <figcaption>Listen to the T-Rex:</figcaption>
+        <audio controls
+            src="{{ object.audio_file.url }}"></audio>
+        <a href="/media/cc0-audio/t-rex-roar.mp3"> Download audio </a>
+    </figure>
+    {% endif %}
     <div id="content"
         class="row">
 
@@ -90,6 +99,11 @@
                 .catch(error => console.log('Error:', error));
         }, 5000);
     }
+    function myFunction() {
+        var x = document.getElementById("myAudio");
+        document.getElementById("mySpan").innerHTML = ("Seeking: " + x.seeking);
+    }
+
 </script>
 
 {% endblock content %}
